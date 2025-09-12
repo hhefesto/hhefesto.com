@@ -30,7 +30,7 @@ jobs:
           # Disable Jekyll processing
           touch public/.nojekyll
           # Optional: custom domain
-          # echo "hhefesto.com" > public/CNAME
+          echo "hhefesto.com" > public/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
