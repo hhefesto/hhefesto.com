@@ -1,0 +1,99 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Setup Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      # Optional: Decrypt secrets with agenix
+      # Only runs if you've added the AGE_SECRET_KEY secret
+      - name: Decrypt secrets
+        if: ${{ secrets.AGE_SECRET_KEY }}
+        run: |
+          # Install agenix
+          nix profile install github:ryantm/agenix
+
+          # Decrypt secrets
+          echo "${{ secrets.AGE_SECRET_KEY }}" > /tmp/secret.key
+
+          # Decrypt any secret files (if they exist)
+          if [ -f secrets/analytics-id.age ]; then
+            agenix -d -i /tmp/secret.key secrets/analytics-id.age > /tmp/analytics-id
+            export VITE_ANALYTICS_ID=$(cat /tmp/analytics-id)
+          fi
+
+          if [ -f secrets/custom-domain.age ]; then
+            agenix -d -i /tmp/secret.key secrets/custom-domain.age > /tmp/custom-domain
+            export CUSTOM_DOMAIN=$(cat /tmp/custom-domain)
+          fi
+
+          # Clean up
+          rm /tmp/secret.key
+        env:
+          AGE_SECRET_KEY: ${{ secrets.AGE_SECRET_KEY }}
+
+      - name: Run checks (only on PRs)
+        if: github.event_name == 'pull_request'
+        run: |
+          nix flake check
+
+      - name: Build site
+        run: |
+          # Export GitHub context for base path
+          export GITHUB_REPOSITORY="${{ github.repository }}"
+
+          # Load any decrypted secrets
+          if [ -f /tmp/analytics-id ]; then
+            export VITE_ANALYTICS_ID=$(cat /tmp/analytics-id)
+          fi
+
+          if [ -f /tmp/custom-domain ]; then
+            export CUSTOM_DOMAIN=$(cat /tmp/custom-domain)
+          fi
+
+          # Build the site
+          nix build .#github-pages
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./result
+
+  # Deploy job (only runs on master branch)
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,11 @@
+workspace:
+  packageSet:
+    registry: "47.0.0"
+
+package:
+  name: hhefesto-landing
+  dependencies:
+    - halogen
+    - aff
+    - prelude
+    - effect

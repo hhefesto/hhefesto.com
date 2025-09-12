@@ -1,0 +1,19 @@
+.DS_Store
+.idea
+*.log
+tmp/
+
+node_modules/
+output/
+.spago/
+dist/
+.psc-ide-port
+.vite/
+
+# Secrets (never commit decrypted)
+*.decrypted
+
+# Local env
+.env.local
+
+result*
