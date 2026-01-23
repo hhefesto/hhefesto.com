@@ -42,6 +42,7 @@ render :: forall m. State -> H.ComponentHTML Action () m
 render _ =
   HH.main_
     [ hero
+    , pricing
     , expertise
     , services
     , process
@@ -49,39 +50,86 @@ render _ =
     , contact
     ]
 
+-- HERO ---------------------------------------------------------------------
+
 hero =
   HH.section
     [ HP.attr (H.AttrName "class") "hero container" ]
-    [ HH.div [ HP.attr (H.AttrName "class") "hero-content" ]
-        [ badge "Nix • Reproducible • Bulletproof"
-        , HH.h1 [ HP.attr (H.AttrName "class") "hero-title" ]
-            [ HH.text "Turn your prototype into bulletproof production infrastructure" ]
-        , HH.p [ HP.attr (H.AttrName "class") "hero-subtitle" ]
-            [ HH.text "I specialize in "
-            , HH.strong_ [ HH.text "Nix flakes" ]
-            , HH.text " and "
-            , HH.strong_ [ HH.text "functional programming" ]
-            , HH.text " to build completely reproducible CI/CD pipelines. From dev → staging → prod with zero configuration drift, automated testing between stages, and deployments that work exactly the same every time."
-            ]
-        , HH.div [ HP.attr (H.AttrName "class") "hero-cta" ]
-            [ HH.a
-                [ HP.attr (H.AttrName "class") "btn btn-primary"
-                , HP.href "#contact"
+    [ HH.div [ HP.attr (H.AttrName "class") "hero-grid" ]
+        [ HH.div [ HP.attr (H.AttrName "class") "hero-content" ]
+            [ badge "Nix • Reproducible • Bulletproof"
+            , HH.h1 [ HP.attr (H.AttrName "class") "hero-title" ]
+                [ HH.text "Turn your prototype into bulletproof production infrastructure" ]
+            , HH.p [ HP.attr (H.AttrName "class") "hero-subtitle" ]
+                [ HH.text "I specialize in "
+                , HH.strong_ [ HH.text "Nix flakes" ]
+                , HH.text " and "
+                , HH.strong_ [ HH.text "functional programming" ]
+                , HH.text " to build completely reproducible CI/CD pipelines. From dev → staging → prod with zero configuration drift, automated testing between stages, and deployments that work exactly the same every time."
                 ]
-                [ HH.text "Transform your deployment" ]
-            , HH.a
-                [ HP.attr (H.AttrName "class") "btn btn-secondary"
-                , HP.href "#services"
+            , HH.div [ HP.attr (H.AttrName "class") "hero-cta" ]
+                [ HH.a
+                    [ HP.attr (H.AttrName "class") "btn btn-primary"
+                    , HP.href "#contact"
+                    ]
+                    [ HH.text "Transform your deployment" ]
+                , HH.a
+                    [ HP.attr (H.AttrName "class") "btn btn-secondary"
+                    , HP.href "#services"
+                    ]
+                    [ HH.text "See what I build" ]
+                , HH.a
+                    [ HP.attr (H.AttrName "class") "btn btn-tertiary"
+                    , HP.href "#pricing"
+                    ]
+                    [ HH.text "View pricing" ]
                 ]
-                [ HH.text "See what I build" ]
+            , HH.div [ HP.attr (H.AttrName "class") "hero-stats" ]
+                [ stat "100%" "Reproducible"
+                , stat "0" "Config drift"
+                , stat "24/7" "Reliability"
+                ]
             ]
-        , HH.div [ HP.attr (H.AttrName "class") "hero-stats" ]
-            [ stat "100%" "Reproducible"
-            , stat "0" "Config drift"
-            , stat "24/7" "Reliability"
-            ]
+        , HH.aside [ HP.attr (H.AttrName "class") "hero-offer" ]
+            [ pricingSpotlight ]
         ]
     ]
+
+pricingSpotlight =
+  HH.div [ HP.attr (H.AttrName "class") "card pricing-card pricing-card--hero" ]
+    [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ]
+        [ HH.text "Launch pricing" ]
+    , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ]
+        [ HH.text "Senior Infrastructure / FP" ]
+    , HH.div [ HP.attr (H.AttrName "class") "pricing-amount" ]
+        [ HH.span [ HP.attr (H.AttrName "class") "pricing-currency" ] [ HH.text "$" ]
+        , HH.span [ HP.attr (H.AttrName "class") "pricing-number" ] [ HH.text "30" ]
+        , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
+        ]
+    , HH.p [ HP.attr (H.AttrName "class") "muted" ]
+        [ HH.text "Intro rate for early partners. Clear scope, fast iteration, reproducible delivery." ]
+    , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
+        [ HH.li_ [ HH.text "✅ Reproducible dev/staging/prod" ]
+        , HH.li_ [ HH.text "✅ CI/CD with testing gates" ]
+        , HH.li_ [ HH.text "✅ Monitoring + rollback strategy" ]
+        ]
+    , HH.div [ HP.attr (H.AttrName "class") "card-actions" ]
+        [ HH.a
+            [ HP.attr (H.AttrName "class") "btn btn-primary btn-block"
+            , HP.href "mailto:hhefesto@rdataa.com?subject=DevOps%20Transformation%20Inquiry"
+            ]
+            [ HH.text "Start the conversation" ]
+        , HH.a
+            [ HP.attr (H.AttrName "class") "btn btn-secondary btn-block"
+            , HP.href "#contact"
+            ]
+            [ HH.text "Free consultation" ]
+        ]
+    , HH.div [ HP.attr (H.AttrName "class") "card-footnote" ]
+        [ HH.text "Usually respond within 4 hours" ]
+    ]
+
+-- EXPERTISE ----------------------------------------------------------------
 
 expertise =
   section "expertise" "My expertise"
@@ -107,6 +155,8 @@ expertise =
         ]
     ]
 
+-- SERVICES -----------------------------------------------------------------
+
 services =
   section "services" "What I deliver"
     [ HH.div [ HP.attr (H.AttrName "class") "services-grid" ]
@@ -114,16 +164,18 @@ services =
             "Self-hosted GitHub runners on NixOS. Automated dev → staging → prod pipeline with testing gates, rollback capabilities, and zero downtime deployments."
         , serviceCard "🤖" "Private LLM Infrastructure"
             "Deploy secure, internal LLMs that can safely process your confidential data. Perfect for companies that need AI but can't use public APIs."
+        , serviceCard "🎨" "Type-Safe Frontends"
+            "Full-stack functional development with Yesod, Reflex FRP, and PureScript. Reactive, composable UIs with compile-time guarantees and seamless backend integration."
         , serviceCard "🗄️" "Database Excellence"
             "PostgreSQL, Redis, or any database. Automated backups, migrations, monitoring, performance tuning. Managed cloud DB or self-hosted."
         , serviceCard "🔒" "Security & Secrets"
             "SSL automation, Nginx hardening, secret management with sops/age, SSH security, and least-privilege access controls."
         , serviceCard "📊" "Observability Stack"
             "Grafana dashboards, Prometheus metrics, structured logging, SLOs, and intelligent alerting. Know what's happening before your users do."
-        , serviceCard "⚡" "Performance Optimization"
-            "Build time optimization, caching strategies, container optimization, and cost reduction. Make your infrastructure faster and cheaper."
         ]
     ]
+
+-- PROCESS ------------------------------------------------------------------
 
 process =
   section "process" "How I work"
@@ -135,17 +187,107 @@ process =
         ]
     ]
 
-testimonial =
-  HH.section
-    [ HP.attr (H.AttrName "class") "testimonial container" ]
-    [ HH.div [ HP.attr (H.AttrName "class") "testimonial-content" ]
-        [ HH.blockquote_
-            [ HH.text "\"The reproducibility Daniel achieved with Nix flakes eliminated our 'works on my machine' problems completely. Our deployments went from nerve-wracking events to boring, predictable processes.\"" ]
-        , HH.div [ HP.attr (H.AttrName "class") "testimonial-author" ]
-            [ HH.strong_ [ HH.text "— CTO, FinTech Startup" ]
+-- PRICING ------------------------------------------------------------------
+
+pricing =
+  section "pricing" "Pricing that’s easy to say “yes” to"
+    [ HH.div [ HP.attr (H.AttrName "class") "pricing-layout" ]
+        [ HH.div [ HP.attr (H.AttrName "class") "pricing-lede" ]
+            [ HH.p [ HP.attr (H.AttrName "class") "lead" ]
+                [ HH.text "One simple rate. Clear deliverables. Reproducible infrastructure you can keep." ]
+            , HH.div [ HP.attr (H.AttrName "class") "pill-row" ]
+                [ pill "Nix-first"
+                , pill "Security & secrets"
+                , pill "CI/CD + observability"
+                , pill "Docs + handover"
+                ]
+            ]
+        , HH.div [ HP.attr (H.AttrName "class") "pricing-cards" ]
+            [ HH.div [ HP.attr (H.AttrName "class") "card pricing-card pricing-card--main" ]
+                [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "Launch pricing" ]
+                , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ] [ HH.text "Senior Infrastructure / FP" ]
+                , HH.div [ HP.attr (H.AttrName "class") "pricing-amount" ]
+                    [ HH.span [ HP.attr (H.AttrName "class") "pricing-currency" ] [ HH.text "$" ]
+                    , HH.span [ HP.attr (H.AttrName "class") "pricing-number" ] [ HH.text "30" ]
+                    , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
+                    ]
+                , HH.p [ HP.attr (H.AttrName "class") "muted" ]
+                    [ HH.text "Best for getting to a stable, reproducible baseline quickly—then scaling safely." ]
+                , HH.div [ HP.attr (H.AttrName "class") "split" ]
+                    [ HH.div_
+                        [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "Typical outcomes" ]
+                        , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
+                            [ HH.li_ [ HH.text "Hermetic dev shell & build" ]
+                            , HH.li_ [ HH.text "Dev → staging → prod pipeline" ]
+                            , HH.li_ [ HH.text "Observability + alerting" ]
+                            , HH.li_ [ HH.text "Security & secrets management" ]
+                            ]
+                        ]
+                    , HH.div_
+                        [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "How we start" ]
+                        , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
+                            [ HH.li_ [ HH.text "30–45 min consult" ]
+                            , HH.li_ [ HH.text "Audit + prioritized plan" ]
+                            , HH.li_ [ HH.text "First delivery in days, not weeks" ]
+                            ]
+                        ]
+                    ]
+                , HH.div [ HP.attr (H.AttrName "class") "card-actions" ]
+                    [ HH.a
+                        [ HP.attr (H.AttrName "class") "btn btn-primary btn-block"
+                        , HP.href "mailto:hhefesto@rdataa.com?subject=Availability%20Inquiry"
+                        ]
+                        [ HH.text "Ask about availability" ]
+                    ]
+                ]
             ]
         ]
     ]
+
+pill txt =
+  HH.span [ HP.attr (H.AttrName "class") "pill" ] [ HH.text txt ]
+
+-- TESTIMONIAL / PROOF ------------------------------------------------------
+
+testimonial =
+  section "proof" "Proof from real deployments"
+    [ HH.div [ HP.attr (H.AttrName "class") "proof-grid" ]
+        [ HH.figure [ HP.attr (H.AttrName "class") "card quote-card" ]
+            [ HH.blockquote [ HP.attr (H.AttrName "class") "quote" ]
+                [ HH.text "“From initial concept through production deployment, we architected and built "
+                , HH.a [ HP.href "https://xpsoasis.org", HP.attr (H.AttrName "target") "_blank" ] [ HH.text "xpsoasis.org" ]
+                , HH.text " and "
+                , HH.a [ HP.href "https://xesoasis.org", HP.attr (H.AttrName "target") "_blank" ] [ HH.text "xesoasis.org" ]
+                , HH.text " end-to-end: infra, CI/CD, reliability, and delivery. This isn’t marketing—these are running systems.”"
+                ]
+            , HH.figcaption [ HP.attr (H.AttrName "class") "quote-author" ]
+                [ HH.div [ HP.attr (H.AttrName "class") "author-title" ]
+                    [ HH.text "— Live projects shipped by our team" ]
+                , HH.div [ HP.attr (H.AttrName "class") "muted" ]
+                    [ HH.text "Production deployments • reproducible environments • documented handover" ]
+                ]
+            ]
+        , HH.div [ HP.attr (H.AttrName "class") "card proof-card" ]
+            [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "What this looks like" ]
+            , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ] [ HH.text "Concrete deliverables" ]
+            , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
+                [ HH.li_ [ HH.text "Nix flake with hermetic builds (CI matches local)" ]
+                , HH.li_ [ HH.text "Immutable servers + atomic deploys + rollback" ]
+                , HH.li_ [ HH.text "Secrets managed (age/sops), no plaintext drift" ]
+                , HH.li_ [ HH.text "Dashboards + alerts with actionable SLOs" ]
+                ]
+            , HH.div [ HP.attr (H.AttrName "class") "card-actions" ]
+                [ HH.a
+                    [ HP.attr (H.AttrName "class") "btn btn-secondary btn-block"
+                    , HP.href "#contact"
+                    ]
+                    [ HH.text "Let’s map your setup" ]
+                ]
+            ]
+        ]
+    ]
+
+-- CONTACT ------------------------------------------------------------------
 
 contact =
   section "contact" "Ready to bulletproof your infrastructure?"
@@ -155,7 +297,7 @@ contact =
         , HH.div [ HP.attr (H.AttrName "class") "contact-methods" ]
             [ HH.a
                 [ HP.attr (H.AttrName "class") "btn btn-primary btn-large"
-                , HP.href "mailto:daniel@hhefesto.com?subject=DevOps Transformation Inquiry"
+                , HP.href "mailto:hhefesto@rdataa.com?subject=DevOps%20Transformation%20Inquiry"
                 ]
                 [ HH.text "📧 Start the conversation" ]
             , HH.div [ HP.attr (H.AttrName "class") "contact-note" ]

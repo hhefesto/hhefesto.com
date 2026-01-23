@@ -45,13 +45,14 @@
             watchexec
             jq
             inputs.agenix.packages.${system}.default
-            busybox
+            darkhttpd
+            nodePackages.purescript-language-server
           ];
           shellHook = ''
             echo "PureScript Landing Page (reproducible)"
             echo "• spago build        - typecheck/compile (creates spago.lock)"
             echo "• spago bundle       - bundle to index.js"
-            echo 'to preview: nix build .#github-pages && busybox httpd -f -p 8000 -h ./result;'
+            echo 'to preview: nix build .#github-pages && darkhttpd ./result --port 8000;'
           '';
         };
 
@@ -110,7 +111,7 @@
             echo "hhefesto.com" > "$out/CNAME"
           '';
 
-          default = self'.packages.github-pages;
+          default = self'.packages.website;
         };
 
         checks = {
