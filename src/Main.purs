@@ -126,7 +126,7 @@ pricingSpotlight =
             [ HH.text "Free consultation" ]
         ]
     , HH.div [ HP.attr (H.AttrName "class") "card-footnote" ]
-        [ HH.text "Usually respond within 4 hours" ]
+        [ HH.text "Usually respond within 4 hours during UTC-6 business hours" ]
     ]
 
 -- EXPERTISE ----------------------------------------------------------------
@@ -250,7 +250,7 @@ pill txt =
 -- TESTIMONIAL / PROOF ------------------------------------------------------
 
 testimonial =
-  section "proof" "Proof from real deployments"
+  section "proof" "Selected Work"
     [ HH.div [ HP.attr (H.AttrName "class") "proof-grid" ]
         [ HH.figure [ HP.attr (H.AttrName "class") "card quote-card" ]
             [ HH.blockquote [ HP.attr (H.AttrName "class") "quote" ]
@@ -301,7 +301,7 @@ contact =
                 ]
                 [ HH.text "📧 Start the conversation" ]
             , HH.div [ HP.attr (H.AttrName "class") "contact-note" ]
-                [ HH.text "Usually respond within 4 hours • Free consultation call" ]
+                [ HH.text "Usually respond within 4 hours during UTC-6 business hours • Free consultation call" ]
             ]
         ]
     ]
