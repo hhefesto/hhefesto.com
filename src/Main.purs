@@ -98,7 +98,7 @@ hero =
 pricingSpotlight =
   HH.div [ HP.attr (H.AttrName "class") "card pricing-card pricing-card--hero" ]
     [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ]
-        [ HH.text "One-week trial rate" ]
+        [ HH.text "First-week discount" ]
     , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ]
         [ HH.text "Senior Infrastructure / FP" ]
     , HH.div [ HP.attr (H.AttrName "class") "pricing-amount" ]
@@ -107,7 +107,7 @@ pricingSpotlight =
         , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
         ]
     , HH.p [ HP.attr (H.AttrName "class") "muted" ]
-        [ HH.text "I can do $30/hour for the first week. For longer collaborations, we'll adjust scope and rate together." ]
+        [ HH.text "I'm offering a big first-week discount at $30/hour so we can prove fit fast. For longer collaborations, we'll adjust scope and rate together." ]
     , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
         [ HH.li_ [ HH.text "✅ Reproducible dev/staging/prod" ]
         , HH.li_ [ HH.text "✅ CI/CD with testing gates" ]
@@ -190,11 +190,11 @@ process =
 -- PRICING ------------------------------------------------------------------
 
 pricing =
-  section "pricing" "Start at $30/hour for one week"
+  section "pricing" "Big first-week discount: $30/hour"
     [ HH.div [ HP.attr (H.AttrName "class") "pricing-layout" ]
         [ HH.div [ HP.attr (H.AttrName "class") "pricing-lede" ]
             [ HH.p [ HP.attr (H.AttrName "class") "lead" ]
-                [ HH.text "Try a focused first week at $30/hour. If the collaboration continues, we'll adjust the scope and rate around the longer-term plan." ]
+                [ HH.text "Start with a heavily discounted first week at $30/hour. If the collaboration continues, we'll adjust the scope and rate around the longer-term plan." ]
             , HH.div [ HP.attr (H.AttrName "class") "pill-row" ]
                 [ pill "Nix-first"
                 , pill "Security & secrets"
@@ -204,7 +204,7 @@ pricing =
             ]
         , HH.div [ HP.attr (H.AttrName "class") "pricing-cards" ]
             [ HH.div [ HP.attr (H.AttrName "class") "card pricing-card pricing-card--main" ]
-                [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "One-week trial rate" ]
+                [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "First-week discount" ]
                 , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ] [ HH.text "Senior Infrastructure / FP" ]
                 , HH.div [ HP.attr (H.AttrName "class") "pricing-amount" ]
                     [ HH.span [ HP.attr (H.AttrName "class") "pricing-currency" ] [ HH.text "$" ]
@@ -212,7 +212,7 @@ pricing =
                     , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
                     ]
                 , HH.p [ HP.attr (H.AttrName "class") "muted" ]
-                    [ HH.text "Best for a focused first week: audit, prioritize, and start delivering a stable, reproducible baseline." ]
+                    [ HH.text "A low-risk way to audit, prioritize, and start delivering a stable, reproducible baseline before committing long term." ]
                 , HH.div [ HP.attr (H.AttrName "class") "split" ]
                     [ HH.div_
                         [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "Typical outcomes" ]
