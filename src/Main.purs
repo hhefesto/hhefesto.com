@@ -107,7 +107,7 @@ pricingSpotlight =
         , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
         ]
     , HH.p [ HP.attr (H.AttrName "class") "muted" ]
-        [ HH.text "I'm offering a big first-week discount at $30/hour so we can prove fit fast. For longer collaborations, we'll adjust scope and rate together." ]
+        [ HH.text "The first hour is free so we can set goals and decide if the discounted $30/hour first week is the right next step. For longer collaborations, we'll adjust scope and rate together." ]
     , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
         [ HH.li_ [ HH.text "✅ Reproducible dev/staging/prod" ]
         , HH.li_ [ HH.text "✅ CI/CD with testing gates" ]
@@ -194,7 +194,7 @@ pricing =
     [ HH.div [ HP.attr (H.AttrName "class") "pricing-layout" ]
         [ HH.div [ HP.attr (H.AttrName "class") "pricing-lede" ]
             [ HH.p [ HP.attr (H.AttrName "class") "lead" ]
-                [ HH.text "Start with a heavily discounted first week at $30/hour. If the collaboration continues, we'll adjust the scope and rate around the longer-term plan." ]
+                [ HH.text "Start with a free first-hour consultation to set goals, check fit, and decide whether to move into a heavily discounted first week at $30/hour. If the collaboration continues, we'll adjust the scope and rate around the longer-term plan." ]
             , HH.div [ HP.attr (H.AttrName "class") "pill-row" ]
                 [ pill "Nix-first"
                 , pill "Security & secrets"
@@ -226,9 +226,9 @@ pricing =
                     , HH.div_
                         [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "How we start" ]
                         , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
-                            [ HH.li_ [ HH.text "30–45 min consult" ]
-                            , HH.li_ [ HH.text "Audit + prioritized plan" ]
-                            , HH.li_ [ HH.text "First delivery in days, not weeks" ]
+                            [ HH.li_ [ HH.text "Free first-hour consultation" ]
+                            , HH.li_ [ HH.text "Goals, fit, and one-week scope" ]
+                            , HH.li_ [ HH.text "Discounted first week if it makes sense" ]
                             ]
                         ]
                     ]
