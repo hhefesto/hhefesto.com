@@ -1,4 +1,4 @@
-name: Deploy PureScript site to Pages
+name: Deploy static site to Pages
 on:
   push:
     branches: [ master ]
@@ -18,19 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v27
-
-      - name: Build site with Nix
-        run: |
-          nix build .#website --out-link site
-          mkdir -p public
-          cp -rL site/* public/
-          # Disable Jekyll processing
-          touch public/.nojekyll
-          # Optional: custom domain
-          echo "hhefesto.com" > public/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
