@@ -558,7 +558,7 @@
     "aff": {
       "type": "registry",
       "version": "7.1.0",
-      "integrity": "sha256-7hOC6uQO9XBAI5FD8F33ChLjFAiZVfd4BJMqlMh7TNU=",
+      "integrity": "sha256-/nOpDQVnKIoP1pQ1ZZBYpadK0TuMlG4WwufGzJpsfD0=",
       "dependencies": [
         "arrays",
         "bifunctors",
