@@ -108,7 +108,7 @@
             cp -r ${self'.packages.website}/* "$out"/
             touch "$out/.nojekyll"
             # write your custom domain here
-            echo "hhefesto.com" > "$out/CNAME"
+            echo "hhefesto.dev" > "$out/CNAME"
           '';
 
           default = self'.packages.website;
