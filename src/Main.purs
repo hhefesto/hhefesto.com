@@ -42,13 +42,26 @@ render :: forall m. State -> H.ComponentHTML Action () m
 render _ =
   HH.main_
     [ hero
-    , pricing
+    , work
     , expertise
     , services
     , process
-    , testimonial
+    , pricing
+    , about
     , contact
     ]
+
+-- The one way in: every "Book a free call" button leads to the contact
+-- section, and only that section holds the email link.
+mailto :: String
+mailto = "mailto:hhefesto@rdataa.com?subject=Free%20call"
+
+bookCall cls =
+  HH.a
+    [ HP.attr (H.AttrName "class") cls
+    , HP.href "#contact"
+    ]
+    [ HH.text "Book a free call" ]
 
 -- HERO ---------------------------------------------------------------------
 
@@ -57,100 +70,120 @@ hero =
     [ HP.attr (H.AttrName "class") "hero container" ]
     [ HH.div [ HP.attr (H.AttrName "class") "hero-grid" ]
         [ HH.div [ HP.attr (H.AttrName "class") "hero-content" ]
-            [ badge "Nix • Reproducible • Bulletproof"
+            [ badge "Nix • Haskell • Bend • Verified software"
             , HH.h1 [ HP.attr (H.AttrName "class") "hero-title" ]
-                [ HH.text "Turn your prototype into bulletproof production infrastructure" ]
+                [ HH.text "Reproducible infrastructure and verified software" ]
             , HH.p [ HP.attr (H.AttrName "class") "hero-subtitle" ]
-                [ HH.text "I specialize in "
-                , HH.strong_ [ HH.text "Nix flakes" ]
-                , HH.text " and "
-                , HH.strong_ [ HH.text "functional programming" ]
-                , HH.text " to build completely reproducible CI/CD pipelines. From dev → staging → prod with zero configuration drift, automated testing between stages, and deployments that work exactly the same every time."
+                [ HH.text "I build "
+                , HH.strong_ [ HH.text "Nix" ]
+                , HH.text " dev shells, CI and deploys that behave the same on every machine, and "
+                , HH.strong_ [ HH.text "functional software" ]
+                , HH.text " (Haskell, PureScript, Bend) whose key properties are stated as laws and checked by the compiler, not only tested. "
+                , HH.text "My own work includes "
+                , extLink "https://ana.hhefesto.dev" "ana"
+                , HH.text ", a language model specified, trained and evaluated in Bend, and "
+                , extLink "https://elcubodeedgar.hhefesto.dev" "El cubo de Edgar"
+                , HH.text ", an optimal Rubik's cube solver in Bend with its group theory as proven laws."
                 ]
             , HH.div [ HP.attr (H.AttrName "class") "hero-cta" ]
-                [ HH.a
-                    [ HP.attr (H.AttrName "class") "btn btn-primary"
-                    , HP.href "#contact"
-                    ]
-                    [ HH.text "Transform your deployment" ]
+                [ bookCall "btn btn-primary"
                 , HH.a
                     [ HP.attr (H.AttrName "class") "btn btn-secondary"
-                    , HP.href "#services"
+                    , HP.href "#work"
                     ]
-                    [ HH.text "See what I build" ]
-                , HH.a
-                    [ HP.attr (H.AttrName "class") "btn btn-tertiary"
-                    , HP.href "#pricing"
-                    ]
-                    [ HH.text "View pricing" ]
-                ]
-            , HH.div [ HP.attr (H.AttrName "class") "hero-stats" ]
-                [ stat "100%" "Reproducible"
-                , stat "0" "Config drift"
-                , stat "24/7" "Reliability"
+                    [ HH.text "See my work" ]
                 ]
             ]
         , HH.aside [ HP.attr (H.AttrName "class") "hero-offer" ]
-            [ pricingSpotlight ]
+            [ firstStep ]
         ]
     ]
 
-pricingSpotlight =
+firstStep =
   HH.div [ HP.attr (H.AttrName "class") "card pricing-card pricing-card--hero" ]
     [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ]
-        [ HH.text "First-week discount" ]
+        [ HH.text "A fixed-price first step" ]
     , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ]
-        [ HH.text "Senior Infrastructure / FP" ]
-    , HH.div [ HP.attr (H.AttrName "class") "pricing-amount" ]
-        [ HH.span [ HP.attr (H.AttrName "class") "pricing-currency" ] [ HH.text "$" ]
-        , HH.span [ HP.attr (H.AttrName "class") "pricing-number" ] [ HH.text "30" ]
-        , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
-        ]
+        [ HH.text "One-week audit" ]
     , HH.p [ HP.attr (H.AttrName "class") "muted" ]
-        [ HH.text "The first hour is free so we can set goals and decide if the discounted $30/hour first week is the right next step. For longer collaborations, we'll adjust scope and rate together." ]
+        [ HH.text "I review your builds, deploys and infrastructure, and hand you a written, prioritised plan plus the first fixes. The price is fixed and agreed before we start; the first call is free." ]
     , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
-        [ HH.li_ [ HH.text "✅ Reproducible dev/staging/prod" ]
-        , HH.li_ [ HH.text "✅ CI/CD with testing gates" ]
-        , HH.li_ [ HH.text "✅ Monitoring + rollback strategy" ]
+        [ HH.li_ [ HH.text "✅ What breaks reproducibility today, and why" ]
+        , HH.li_ [ HH.text "✅ A dev → staging → prod plan with testing gates" ]
+        , HH.li_ [ HH.text "✅ The first fixes, done that same week" ]
         ]
     , HH.div [ HP.attr (H.AttrName "class") "card-actions" ]
-        [ HH.a
-            [ HP.attr (H.AttrName "class") "btn btn-primary btn-block"
-            , HP.href "mailto:hhefesto@rdataa.com?subject=DevOps%20Transformation%20Inquiry"
-            ]
-            [ HH.text "Start the conversation" ]
-        , HH.a
-            [ HP.attr (H.AttrName "class") "btn btn-secondary btn-block"
-            , HP.href "#contact"
-            ]
-            [ HH.text "Free consultation" ]
-        ]
+        [ bookCall "btn btn-primary btn-block" ]
     , HH.div [ HP.attr (H.AttrName "class") "card-footnote" ]
-        [ HH.text "Usually respond within 4 hours during UTC-6 business hours" ]
+        [ HH.text "I usually reply within 4 hours during UTC-6 business hours." ]
     ]
+
+-- WORK ---------------------------------------------------------------------
+
+work =
+  section "work" "Selected work"
+    [ HH.div [ HP.attr (H.AttrName "class") "services-grid" ]
+        [ projectCard "xpsoasis.org and xesoasis.org"
+            [ Tuple2 "https://xpsoasis.org" "xpsoasis.org", Tuple2 "https://xesoasis.org" "xesoasis.org" ]
+            "Architected and built end to end, from first concept to production: infrastructure, CI/CD, reliability and delivery. Both are running systems."
+        , projectCard "ana"
+            [ Tuple2 "https://ana.hhefesto.dev" "ana.hhefesto.dev", Tuple2 "https://github.com/hhefesto/ana" "GitHub" ]
+            "A 115M-parameter language model with a proven meaning: its specification is a set of theorems Bend checks, and the model, the GPU trainer, the decoder and the data tools are Bend programs too."
+        , projectCard "El cubo de Edgar"
+            [ Tuple2 "https://elcubodeedgar.hhefesto.dev" "elcubodeedgar.hhefesto.dev", Tuple2 "https://github.com/hhefesto/elcubodeedgar" "GitHub" ]
+            "An optimal Rubik's cube solver in Bend (Korf's IDA*), its group theory as proven laws. It runs on the visitor's own device, compiled to JavaScript, one worker per core."
+        , projectCard "mugen"
+            [ Tuple2 "https://github.com/hhefesto/mugen" "GitHub" ]
+            "One chat with an AI that never ends, in your terminal: every message kept, its memory a binary tree of summaries. Written in Bend 2."
+        , projectCard "bend-frp"
+            [ Tuple2 "https://github.com/hhefesto/bend-frp" "GitHub" ]
+            "Functional reactive programming in Bend, after Conal Elliott: a precise meaning first, and an implementation proved to agree with it."
+        , projectCard "agda2bend"
+            [ Tuple2 "https://github.com/hhefesto/agda2bend" "GitHub" ]
+            "Agda in, checked Bend out: translates Agda modules and their imports into Bend 2, keeping only what upstream Bend's checker accepts."
+        ]
+    ]
+
+data Tuple2 = Tuple2 String String
+
+projectCard title links description =
+  HH.div [ HP.attr (H.AttrName "class") "service-card project-card" ]
+    [ HH.h3 [ HP.attr (H.AttrName "class") "service-title" ] [ HH.text title ]
+    , HH.p [ HP.attr (H.AttrName "class") "service-description" ] [ HH.text description ]
+    , HH.div [ HP.attr (H.AttrName "class") "project-links" ]
+        (map (\(Tuple2 url label) -> extLink url label) links)
+    ]
+
+extLink url label =
+  HH.a
+    [ HP.href url
+    , HP.attr (H.AttrName "target") "_blank"
+    , HP.attr (H.AttrName "rel") "noopener"
+    ]
+    [ HH.text label ]
 
 -- EXPERTISE ----------------------------------------------------------------
 
 expertise =
-  section "expertise" "My expertise"
+  section "expertise" "What I work with"
     [ HH.div [ HP.attr (H.AttrName "class") "expertise-grid" ]
-        [ expertiseCard "Nix Ecosystem" "nix-logo"
-            [ "Nix flakes for hermetic environments"
-            , "NixOS for immutable infrastructure"
-            , "Zero-config dev shells that work everywhere"
-            , "Atomic rollbacks and perfect reproducibility"
+        [ expertiseCard "Nix" "nix-logo"
+            [ "Nix flakes for hermetic builds and dev shells"
+            , "NixOS for immutable servers"
+            , "CI that builds exactly what you build locally"
+            , "Atomic deploys and rollbacks"
             ]
-        , expertiseCard "Functional Programming" "fp-logo"
-            [ "Haskell for bulletproof backend systems"
-            , "PureScript for type-safe frontends"
-            , "Immutable infrastructure principles"
-            , "Composable, testable system design"
+        , expertiseCard "Functional programming and proofs" "fp-logo"
+            [ "Haskell backends"
+            , "PureScript and Reflex FRP frontends"
+            , "Bend and Agda: laws stated and machine-checked"
+            , "Property tests where a proof is out of reach"
             ]
-        , expertiseCard "Multi-Cloud Mastery" "cloud-logo"
+        , expertiseCard "Cloud and hosting" "cloud-logo"
             [ "AWS • GCP • Hetzner • OVH • Rumble"
             , "Provider-agnostic infrastructure as code"
             , "Cost optimization across platforms"
-            , "Migration strategies between clouds"
+            , "Migrations between clouds"
             ]
         ]
     ]
@@ -160,18 +193,18 @@ expertise =
 services =
   section "services" "What I deliver"
     [ HH.div [ HP.attr (H.AttrName "class") "services-grid" ]
-        [ serviceCard "🔄" "Bulletproof CI/CD"
-            "Self-hosted GitHub runners on NixOS. Automated dev → staging → prod pipeline with testing gates, rollback capabilities, and zero downtime deployments."
-        , serviceCard "🤖" "Private LLM Infrastructure"
-            "Deploy secure, internal LLMs that can safely process your confidential data. Perfect for companies that need AI but can't use public APIs."
-        , serviceCard "🎨" "Type-Safe Frontends"
-            "Full-stack functional development with Yesod, Reflex FRP, and PureScript. Reactive, composable UIs with compile-time guarantees and seamless backend integration."
-        , serviceCard "🗄️" "Database Excellence"
-            "PostgreSQL, Redis, or any database. Automated backups, migrations, monitoring, performance tuning. Managed cloud DB or self-hosted."
-        , serviceCard "🔒" "Security & Secrets"
-            "SSL automation, Nginx hardening, secret management with sops/age, SSH security, and least-privilege access controls."
-        , serviceCard "📊" "Observability Stack"
-            "Grafana dashboards, Prometheus metrics, structured logging, SLOs, and intelligent alerting. Know what's happening before your users do."
+        [ serviceCard "🔄" "Reproducible CI/CD"
+            "Self-hosted GitHub runners on NixOS, and an automated dev → staging → prod pipeline with testing gates between stages and rollbacks."
+        , serviceCard "✅" "Verified software"
+            "The properties your system depends on, stated as laws and checked on every change: proofs in Bend or Agda where they fit, property tests in Haskell where they don't."
+        , serviceCard "🤖" "Private LLM infrastructure"
+            "Internal LLMs that can process your confidential data, for companies that need AI but can't use public APIs. I train and serve my own model, ana, end to end."
+        , serviceCard "🎨" "Type-safe frontends"
+            "Full-stack functional development with Yesod, Reflex FRP and PureScript: composable UIs with compile-time guarantees."
+        , serviceCard "📊" "Databases and observability"
+            "PostgreSQL, Redis or others, managed or self-hosted, with backups and migrations; Grafana, Prometheus, structured logs, SLOs and alerts that point at the cause."
+        , serviceCard "🔒" "Security and secrets"
+            "TLS automation, Nginx hardening, secrets managed with sops/age, SSH security, and least-privilege access."
         ]
     ]
 
@@ -180,65 +213,53 @@ services =
 process =
   section "process" "How I work"
     [ HH.div [ HP.attr (H.AttrName "class") "process-flow" ]
-        [ processStep "01" "Audit" "Deep dive into your current setup, pain points, and requirements. Identify the biggest wins for reproducibility and reliability."
-        , processStep "02" "Design" "Create a Nix-first architecture plan with clear dev/staging/prod environments, testing strategies, and deployment workflows."
-        , processStep "03" "Build" "Implement with Nix flakes, set up CI/CD pipelines, configure monitoring, and establish security best practices."
-        , processStep "04" "Deploy" "Migrate to the new system with zero downtime, comprehensive testing, and full documentation handover."
+        [ processStep "01" "Audit" "A close look at your current setup, its pain points and requirements, to find the biggest wins for reproducibility and reliability."
+        , processStep "02" "Design" "A Nix-first plan: clear dev, staging and prod environments, a testing strategy, and the deployment workflow."
+        , processStep "03" "Build" "Nix flakes, CI/CD pipelines, monitoring and security, built in small steps you can review."
+        , processStep "04" "Hand over" "A step-by-step migration, tested at each stage, with documentation your team can run without me."
         ]
     ]
 
 -- PRICING ------------------------------------------------------------------
 
 pricing =
-  section "pricing" "Big first-week discount: $30/hour"
+  section "pricing" "Pricing: fixed quotes, no open-ended hours"
     [ HH.div [ HP.attr (H.AttrName "class") "pricing-layout" ]
         [ HH.div [ HP.attr (H.AttrName "class") "pricing-lede" ]
             [ HH.p [ HP.attr (H.AttrName "class") "lead" ]
-                [ HH.text "Start with a free first-hour consultation to set goals, check fit, and decide whether to move into a heavily discounted first week at $30/hour. If the collaboration continues, we'll adjust the scope and rate around the longer-term plan." ]
+                [ HH.text "We start with a free 30-minute call to set goals and check fit. Then a one-week audit at a fixed price: you get a written, prioritised plan plus the first fixes. After that I work by the week or by project, and you get a written scope and a fixed price before any work starts." ]
             , HH.div [ HP.attr (H.AttrName "class") "pill-row" ]
                 [ pill "Nix-first"
-                , pill "Security & secrets"
+                , pill "Verified where it matters"
                 , pill "CI/CD + observability"
                 , pill "Docs + handover"
                 ]
             ]
         , HH.div [ HP.attr (H.AttrName "class") "pricing-cards" ]
             [ HH.div [ HP.attr (H.AttrName "class") "card pricing-card pricing-card--main" ]
-                [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "First-week discount" ]
-                , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ] [ HH.text "Senior Infrastructure / FP" ]
-                , HH.div [ HP.attr (H.AttrName "class") "pricing-amount" ]
-                    [ HH.span [ HP.attr (H.AttrName "class") "pricing-currency" ] [ HH.text "$" ]
-                    , HH.span [ HP.attr (H.AttrName "class") "pricing-number" ] [ HH.text "30" ]
-                    , HH.span [ HP.attr (H.AttrName "class") "pricing-period" ] [ HH.text "/hour" ]
-                    ]
-                , HH.p [ HP.attr (H.AttrName "class") "muted" ]
-                    [ HH.text "A low-risk way to audit, prioritize, and start delivering a stable, reproducible baseline before committing long term." ]
+                [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "How we start" ]
+                , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ] [ HH.text "Call, audit, then weekly or per project" ]
                 , HH.div [ HP.attr (H.AttrName "class") "split" ]
                     [ HH.div_
-                        [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "Typical outcomes" ]
+                        [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "Steps" ]
                         , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
-                            [ HH.li_ [ HH.text "Hermetic dev shell & build" ]
-                            , HH.li_ [ HH.text "Dev → staging → prod pipeline" ]
-                            , HH.li_ [ HH.text "Observability + alerting" ]
-                            , HH.li_ [ HH.text "Security & secrets management" ]
+                            [ HH.li_ [ HH.text "Free 30-minute call" ]
+                            , HH.li_ [ HH.text "One-week audit, fixed price" ]
+                            , HH.li_ [ HH.text "Weekly or per-project work, quoted up front" ]
                             ]
                         ]
                     , HH.div_
-                        [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "How we start" ]
+                        [ HH.div [ HP.attr (H.AttrName "class") "split-title" ] [ HH.text "Typical outcomes" ]
                         , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
-                            [ HH.li_ [ HH.text "Free first-hour consultation" ]
-                            , HH.li_ [ HH.text "Goals, fit, and one-week scope" ]
-                            , HH.li_ [ HH.text "Discounted first week if it makes sense" ]
+                            [ HH.li_ [ HH.text "Hermetic dev shell and build" ]
+                            , HH.li_ [ HH.text "Dev → staging → prod pipeline" ]
+                            , HH.li_ [ HH.text "Observability and alerting" ]
+                            , HH.li_ [ HH.text "Secrets management" ]
                             ]
                         ]
                     ]
                 , HH.div [ HP.attr (H.AttrName "class") "card-actions" ]
-                    [ HH.a
-                        [ HP.attr (H.AttrName "class") "btn btn-primary btn-block"
-                        , HP.href "mailto:hhefesto@rdataa.com?subject=Availability%20Inquiry"
-                        ]
-                        [ HH.text "Ask about availability" ]
-                    ]
+                    [ bookCall "btn btn-primary btn-block" ]
                 ]
             ]
         ]
@@ -247,42 +268,15 @@ pricing =
 pill txt =
   HH.span [ HP.attr (H.AttrName "class") "pill" ] [ HH.text txt ]
 
--- TESTIMONIAL / PROOF ------------------------------------------------------
+-- ABOUT --------------------------------------------------------------------
 
-testimonial =
-  section "proof" "Selected Work"
-    [ HH.div [ HP.attr (H.AttrName "class") "proof-grid" ]
-        [ HH.figure [ HP.attr (H.AttrName "class") "card quote-card" ]
-            [ HH.blockquote [ HP.attr (H.AttrName "class") "quote" ]
-                [ HH.text "“From initial concept through production deployment, we architected and built "
-                , HH.a [ HP.href "https://xpsoasis.org", HP.attr (H.AttrName "target") "_blank" ] [ HH.text "xpsoasis.org" ]
-                , HH.text " and "
-                , HH.a [ HP.href "https://xesoasis.org", HP.attr (H.AttrName "target") "_blank" ] [ HH.text "xesoasis.org" ]
-                , HH.text " end-to-end: infra, CI/CD, reliability, and delivery. This isn’t marketing—these are running systems.”"
-                ]
-            , HH.figcaption [ HP.attr (H.AttrName "class") "quote-author" ]
-                [ HH.div [ HP.attr (H.AttrName "class") "author-title" ]
-                    [ HH.text "— Live projects shipped by our team" ]
-                , HH.div [ HP.attr (H.AttrName "class") "muted" ]
-                    [ HH.text "Production deployments • reproducible environments • documented handover" ]
-                ]
-            ]
-        , HH.div [ HP.attr (H.AttrName "class") "card proof-card" ]
-            [ HH.div [ HP.attr (H.AttrName "class") "card-kicker" ] [ HH.text "What this looks like" ]
-            , HH.h3 [ HP.attr (H.AttrName "class") "card-title" ] [ HH.text "Concrete deliverables" ]
-            , HH.ul [ HP.attr (H.AttrName "class") "list-compact" ]
-                [ HH.li_ [ HH.text "Nix flake with hermetic builds (CI matches local)" ]
-                , HH.li_ [ HH.text "Immutable servers + atomic deploys + rollback" ]
-                , HH.li_ [ HH.text "Secrets managed (age/sops), no plaintext drift" ]
-                , HH.li_ [ HH.text "Dashboards + alerts with actionable SLOs" ]
-                ]
-            , HH.div [ HP.attr (H.AttrName "class") "card-actions" ]
-                [ HH.a
-                    [ HP.attr (H.AttrName "class") "btn btn-secondary btn-block"
-                    , HP.href "#contact"
-                    ]
-                    [ HH.text "Let’s map your setup" ]
-                ]
+about =
+  section "about" "About"
+    [ HH.div [ HP.attr (H.AttrName "class") "contact-content" ]
+        [ HH.p [ HP.attr (H.AttrName "class") "contact-subtitle" ]
+            [ HH.text "I'm Daniel Herrera ("
+            , extLink "https://github.com/hhefesto" "hhefesto"
+            , HH.text " on GitHub), a functional programmer working in UTC-6. I like strong types, reproducible builds and proofs, and I use them on my own projects as much as on clients': ana, El cubo de Edgar, mugen, bend-frp and agda2bend are open source."
             ]
         ]
     ]
@@ -290,18 +284,18 @@ testimonial =
 -- CONTACT ------------------------------------------------------------------
 
 contact =
-  section "contact" "Ready to bulletproof your infrastructure?"
+  section "contact" "Book a free call"
     [ HH.div [ HP.attr (H.AttrName "class") "contact-content" ]
         [ HH.p [ HP.attr (H.AttrName "class") "contact-subtitle" ]
-            [ HH.text "Tell me about your current setup and where you want to be. I'll create a custom plan to get you there with Nix-powered reproducibility." ]
+            [ HH.text "Tell me about your current setup and where you want it to be. We'll talk for 30 minutes, free, and you'll get a written scope and a fixed price before any work starts." ]
         , HH.div [ HP.attr (H.AttrName "class") "contact-methods" ]
             [ HH.a
                 [ HP.attr (H.AttrName "class") "btn btn-primary btn-large"
-                , HP.href "mailto:hhefesto@rdataa.com?subject=DevOps%20Transformation%20Inquiry"
+                , HP.href mailto
                 ]
-                [ HH.text "📧 Start the conversation" ]
+                [ HH.text "📧 Email me to book a call" ]
             , HH.div [ HP.attr (H.AttrName "class") "contact-note" ]
-                [ HH.text "Usually respond within 4 hours during UTC-6 business hours • Free consultation call" ]
+                [ HH.text "I usually reply within 4 hours during UTC-6 business hours." ]
             ]
         ]
     ]
@@ -318,12 +312,6 @@ section sid title body =
 badge text =
   HH.div [ HP.attr (H.AttrName "class") "badge" ]
     [ HH.text text ]
-
-stat number label =
-  HH.div [ HP.attr (H.AttrName "class") "stat" ]
-    [ HH.div [ HP.attr (H.AttrName "class") "stat-number" ] [ HH.text number ]
-    , HH.div [ HP.attr (H.AttrName "class") "stat-label" ] [ HH.text label ]
-    ]
 
 expertiseCard title icon features =
   HH.div [ HP.attr (H.AttrName "class") "expertise-card" ]

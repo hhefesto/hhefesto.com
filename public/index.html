@@ -3,13 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Daniel Herrera — Nix DevOps Expert | Reproducible Infrastructure</title>
-  <meta name="description" content="Transform your prototype into bulletproof production infrastructure with Nix flakes, functional programming, and truly reproducible CI/CD pipelines." />
+  <title>Daniel Herrera — Nix and functional programming engineer | Haskell, Bend, verified software</title>
+  <meta name="description" content="Reproducible infrastructure with Nix, and functional software (Haskell, PureScript, Bend) with its key properties proved. Start with a fixed-price one-week audit; the first call is free." />
   <link rel="canonical" href="https://hhefesto.dev/" />
-  <meta property="og:title" content="Daniel Herrera — Nix DevOps Expert" />
-  <meta property="og:description" content="Bulletproof infrastructure with Nix flakes and functional programming. Zero config drift, perfect reproducibility." />
+  <meta property="og:title" content="Daniel Herrera — Nix and functional programming engineer" />
+  <meta property="og:description" content="Reproducible infrastructure with Nix, and verified software in Haskell and Bend. Fixed-price one-week audit; the first call is free." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hhefesto.dev/" />
+  <meta property="og:image" content="https://hhefesto.dev/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="theme-color" content="#0ea5e9" />
 
   <!-- Google Fonts -->
@@ -676,6 +680,61 @@
       margin-bottom: 0.35rem;
     }
 
+    /* Selected work: project cards and their links */
+    .project-card {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card .service-description {
+      flex: 1;
+    }
+
+    .project-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      margin-top: 1rem;
+    }
+
+    .project-links a,
+    .hero-subtitle a,
+    .contact-subtitle a,
+    footer a,
+    noscript a {
+      color: var(--accent-primary);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(14, 165, 233, 0.35);
+    }
+
+    .project-links a:hover,
+    .hero-subtitle a:hover,
+    .contact-subtitle a:hover,
+    footer a:hover,
+    noscript a:hover {
+      border-bottom-color: rgba(14, 165, 233, 0.7);
+    }
+
+    .static-summary {
+      padding: 120px 0 40px;
+      color: var(--text-secondary);
+    }
+
+    .static-summary h1 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .static-summary p,
+    .static-summary ul {
+      margin-bottom: 1rem;
+    }
+
+    .static-summary ul {
+      padding-left: 1.25rem;
+    }
+
     /* Contact Section */
     .contact-content {
       max-width: 600px;
@@ -777,27 +836,48 @@
         <div class="brand-icon">DH</div>
         <div>
           <div>Daniel Herrera</div>
-          <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400;">Nix DevOps Expert</div>
+          <div style="font-size: 0.875rem; color: var(--text-muted); font-weight: 400;">Nix &amp; functional programming</div>
         </div>
       </div>
       <div class="nav-links">
-        <a href="#pricing">Pricing</a>
-        <a href="#expertise">Expertise</a>
+        <a href="#work">Work</a>
         <a href="#services">Services</a>
         <a href="#process">Process</a>
-        <a href="#proof">Selected Work</a>
-        <a class="btn btn-secondary" href="#contact">Get Started</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#about">About</a>
+        <a class="btn btn-secondary" href="#contact">Book a free call</a>
       </div>
     </div>
   </nav>
+
+  <!-- For readers and crawlers without JavaScript: the page in brief. -->
+  <noscript>
+    <div class="container static-summary">
+      <h1>Reproducible infrastructure and verified software</h1>
+      <p>I'm Daniel Herrera (<a href="https://github.com/hhefesto">hhefesto</a>). I build Nix dev shells, CI and
+      deploys that behave the same on every machine, and functional software (Haskell, PureScript, Bend) whose key
+      properties are stated as laws and checked by the compiler.</p>
+      <p>Work starts with a free 30-minute call, then a one-week audit at a fixed price: a written, prioritised plan
+      plus the first fixes. After that, weekly or per-project work, quoted up front.</p>
+      <ul>
+        <li><a href="https://xpsoasis.org">xpsoasis.org</a> and <a href="https://xesoasis.org">xesoasis.org</a>:
+          architected and built end to end, from concept to production.</li>
+        <li><a href="https://ana.hhefesto.dev">ana</a>: a language model specified, trained and evaluated in Bend.</li>
+        <li><a href="https://elcubodeedgar.hhefesto.dev">El cubo de Edgar</a>: an optimal Rubik's cube solver in Bend
+          with its group theory as proven laws.</li>
+        <li><a href="https://github.com/hhefesto/mugen">mugen</a>, <a href="https://github.com/hhefesto/bend-frp">bend-frp</a>
+          and <a href="https://github.com/hhefesto/agda2bend">agda2bend</a>: open-source Bend tools.</li>
+      </ul>
+    </div>
+  </noscript>
 
   <!-- PureScript renders everything inside #root -->
   <div id="root"></div>
 
   <footer>
     <div class="container">
-      <div>© <span id="year"></span> Daniel Herrera. All rights reserved.</div>
-      <div style="margin-top: 8px; font-size: 0.875rem;">Built with Nix • PureScript • Functional Programming</div>
+      <div>© <span id="year"></span> Daniel Herrera • <a href="https://github.com/hhefesto">github.com/hhefesto</a></div>
+      <div style="margin-top: 8px; font-size: 0.875rem;">Built with Nix and PureScript • <a href="https://github.com/hhefesto/hhefesto.com">source</a></div>
     </div>
   </footer>
 
