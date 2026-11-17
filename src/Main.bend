@@ -340,7 +340,9 @@ def about() -> W.Html:
           t(" on GitHub), a functional programmer working in UTC-6. I like strong types, reproducible builds and proofs, and I use them on my own projects as much as on clients': ana, El cubo de Edgar, mugen, bend-frp and agda2bend are open source.")]),
        W.el("p", [c("contact-subtitle")],
          [t("What clients and colleagues say about working with me is on "),
-          ext("https://www.linkedin.com/in/hhefesto/", "my LinkedIn"), t(", under Recommendations.")])])])
+          ext("https://www.linkedin.com/in/hhefesto/", "my LinkedIn"), t(", under Recommendations.")]),
+       W.el("p", [c("contact-subtitle")],
+         [t("My CV, as a PDF: "), ext("/CV-Daniel-Herrera.pdf", "CV-Daniel-Herrera.pdf"), t(".")])])])
 
 # Contact: the free call
 

@@ -3,7 +3,8 @@
   # (src/Main.bend), the booking logic it offers the free call with
   # (src/Book.bend), that logic's laws (LAWS.bend, proven in PROOF.bend) and
   # its tests (tests/book.bend). public/ holds the files served as they are:
-  # og.png, CNAME, and slots.json, which `horas publish` writes.
+  # og.png, CNAME, CV-Daniel-Herrera.pdf (the CV, built from
+  # github.com/hhefesto/cv), and slots.json, which `horas publish` writes.
   #
   #   nix build .#site         the site as GitHub Pages serves it (checks the
   #                            Bend and the proofs first)
