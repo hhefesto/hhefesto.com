@@ -278,6 +278,11 @@ about =
             , extLink "https://github.com/hhefesto" "hhefesto"
             , HH.text " on GitHub), a functional programmer working in UTC-6. I like strong types, reproducible builds and proofs, and I use them on my own projects as much as on clients': ana, El cubo de Edgar, mugen, bend-frp and agda2bend are open source."
             ]
+        , HH.p [ HP.attr (H.AttrName "class") "contact-subtitle" ]
+            [ HH.text "What clients and colleagues say about working with me is on "
+            , extLink "https://www.linkedin.com/in/hhefesto/" "my LinkedIn"
+            , HH.text ", under Recommendations."
+            ]
         ]
     ]
 
