@@ -1,7 +1,9 @@
 name: Deploy static site to Pages
+# Every push builds the site with Nix (which checks its Bend and its proofs)
+# and runs its tests; a push to master also deploys it.
 on:
   push:
-    branches: [ master ]
+    branches: [ '**' ]
   workflow_dispatch:
 
 permissions:
@@ -10,7 +12,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: "pages-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -19,12 +21,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: cachix/install-nix-action@v31
+
+      - name: Build the site
+        run: |
+          nix build -L .#site
+          cp -rL result _site
+          chmod -R u+w _site
+          ls -la _site
+
+      - name: Test the booking logic
+        run: nix build -L .#checks.x86_64-linux.tests
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: _site
 
   deploy:
+    if: github.ref == 'refs/heads/master'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

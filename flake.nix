@@ -1,132 +1,111 @@
 {
-  description = "PureScript landing page (reproducible, network-free)";
+  # hhefesto.dev: the landing page, a bend-frp app written in Bend
+  # (src/Main.bend), the booking logic it offers the free call with
+  # (src/Book.bend), that logic's laws (LAWS.bend, proven in PROOF.bend) and
+  # its tests (tests/book.bend). public/ holds the files served as they are:
+  # og.png, CNAME, and slots.json, which `horas publish` writes.
+  #
+  #   nix build .#site         the site as GitHub Pages serves it (checks the
+  #                            Bend and the proofs first)
+  #   nix flake check          that, the tests, and the proofs rechecked by
+  #                            BendTT's kernel (--verdict)
+  description = "hhefesto.dev: a landing page in Bend, on bend-frp";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-
-    # Tooling & reproducible builder
-    purescript-overlay = {
-      url = "github:thomashoneyman/purescript-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    mkSpagoDerivation.url = "github:jeslie0/mkSpagoDerivation";
-
-    # (optional) secrets
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # bend-frp: the FRP library and web runtime the page is built on. Its
+    # flake pins Bend (2.0.39, as horas and ana) and builds BendTT, the
+    # kernel `bend --verdict` checks with.
+    bend-frp.url = "github:hhefesto/bend-frp";
+    nixpkgs.follows = "bend-frp/nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, flake-parts, purescript-overlay, mkSpagoDerivation, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-
-      perSystem = { system, self', ... }: let
-        # Import nixpkgs WITH the overlays applied
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [
-            mkSpagoDerivation.overlays.default
-            purescript-overlay.overlays.default
-          ];
-        };
-      in {
-        # Make this pkgs (with overlays) the one flake-parts uses everywhere in this system
-        _module.args.pkgs = pkgs;
-
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            # Modern (YAML) Spago & compiler from the overlay
-            spago-unstable
-            purs-unstable
-            esbuild
-            watchexec
-            jq
-            inputs.agenix.packages.${system}.default
-            darkhttpd
-            nodePackages.purescript-language-server
-          ];
-          shellHook = ''
-            echo "PureScript Landing Page (reproducible)"
-            echo "• spago build        - typecheck/compile (creates spago.lock)"
-            echo "• spago bundle       - bundle to index.js"
-            echo 'to preview: nix build .#github-pages && darkhttpd ./result --port 8000;'
+  outputs =
+    { self, nixpkgs, bend-frp }:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      each = f: nixpkgs.lib.genAttrs systems (system: f system nixpkgs.legacyPackages.${system});
+      src = nixpkgs.lib.fileset.toSource {
+        root = ./.;
+        fileset = nixpkgs.lib.fileset.unions [
+          ./src
+          ./tests
+          ./public
+          ./LAWS.bend
+          ./PROOF.bend
+        ];
+      };
+      # Bend alone: the site builds without Lean.
+      bendOf = system: bend-frp.inputs.bend2.packages.${system}.default;
+      # Bend with BendTT, for --verdict.
+      bendttOf = system: bend-frp.packages.${system}.bend;
+      # `script` in a writable copy of the site, with bend-frp beside it, as
+      # src/Main.bend imports it (../../bend-frp, as in ~/src).
+      inSource =
+        pkgs: bend: name: script:
+        pkgs.runCommand "hhefesto-dev-${name}" { nativeBuildInputs = [ bend ]; } ''
+          export HOME=$TMPDIR BEND_NO_TELEMETRY=1
+          mkdir w
+          cp -r ${src} w/hhefesto.com
+          cp -r ${bend-frp} w/bend-frp
+          chmod -R u+w w
+          cd w/hhefesto.com
+          ${script}
+        '';
+      gate = file: ''
+        bend --check-only ${file} 2>&1 | tee check.log
+        grep -q 'ALL PROOFS CHECK' check.log
+      '';
+    in
+    {
+      packages = each (
+        system: pkgs: rec {
+          # The page and its JavaScript (bend bundles src/index.html), then
+          # public/ as it is.
+          site = inSource pkgs (bendOf system) "site" ''
+            ${gate "src/Main.bend"}
+            ${gate "PROOF.bend"}
+            bend src/index.html -o $out
+            cp -r public/. $out/
           '';
-        };
+          github-pages = site;
+          default = site;
+        }
+      );
 
-        packages = {
-          # Fully reproducible PureScript build using your spago.lock (no network)
-          website = pkgs.mkSpagoDerivation {
-            src = ./.;
-            spagoYaml = ./spago.yaml;
-            spagoLock = ./spago.lock;
+      checks = each (
+        system: pkgs: {
+          inherit (self.packages.${system}) site;
+          # the laws hold: Bend's checker, then BendTT's kernel
+          verdict = inSource pkgs (bendttOf system) "verdict" ''
+            bend PROOF.bend --verdict 2>&1 | tee $out
+            grep -q 'ALL PROOFS CHECK' $out
+          '';
+          # what the proofs cannot say: the dates, times and email text
+          tests = inSource pkgs (bendOf system) "tests" ''
+            bend tests/book.bend -o book-test
+            ./book-test | tee $out
+          '';
+        }
+      );
 
-            version = "0.1.0";
-            nativeBuildInputs = with pkgs; [ spago-unstable purs-unstable esbuild ];
-
-            # If you also need reproducible npm deps later, uncomment:
-            # buildNodeModulesArgs = {
-            #   npmRoot = ./.;
-            #   nodejs = pkgs.nodejs;
-            # };
-
-            # Bundle PureScript app to ./index.js
-            buildPhase = ''
-              set -euo pipefail
-              export HOME="$PWD/.nix-build-home"
-              spago bundle
-            '';
-
-            # Stage a static site
-            installPhase = ''
-              set -euo pipefail
-              mkdir -p "$out"
-              if [ -d public ]; then
-                cp -r public/* "$out"/
-              else
-                cat > "$out/index.html" <<'HTML'
-              <!doctype html>
-              <meta charset="utf-8"/>
-              <meta name="viewport" content="width=device-width, initial-scale=1"/>
-              <title>My Landing</title>
-              <button id="cta">Click me</button>
-              <p id="app"></p>
-              <script type="module" src="./index.js"></script>
-              HTML
-              fi
-              cp index.js "$out"/
-              [ -d assets ] && cp -r assets "$out"/
+      devShells = each (
+        system: pkgs: {
+          default = pkgs.mkShell {
+            packages = [
+              (bendttOf system)
+              pkgs.darkhttpd
+            ];
+            shellHook = ''
+              echo "hhefesto.dev, in Bend"
+              echo "  nix build .#site && darkhttpd result --port 8000   preview"
+              echo "  bend PROOF.bend --verdict                          the laws"
+              echo "  bend tests/book.bend                               the tests"
             '';
           };
-
-          # Publishable artifact for GitHub Pages
-          github-pages = pkgs.runCommand "hhefesto-landing-gh-pages" { } ''
-            set -euo pipefail
-            mkdir -p "$out"
-            cp -r ${self'.packages.website}/* "$out"/
-            touch "$out/.nojekyll"
-            # write your custom domain here
-            echo "hhefesto.dev" > "$out/CNAME"
-          '';
-
-          default = self'.packages.website;
-        };
-
-        checks = {
-          typecheck = pkgs.runCommand "purescript-typecheck" {
-            nativeBuildInputs = with pkgs; [ spago-unstable purs-unstable ];
-          } ''
-            set -euo pipefail
-            cp -r ${./.} ./
-            chmod -R +w .
-            export HOME="$PWD/.nix-build-home"
-            spago build
-            touch "$out"
-          '';
-          bundle = self'.packages.website;
-        };
-      };
+        }
+      );
     };
 }

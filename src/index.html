@@ -761,6 +761,95 @@
       font-size: 0.875rem;
     }
 
+    /* The free call's open slots (src/Main.bend's picker) */
+    .slots {
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+
+    .slot-zone,
+    .slot-note {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .slot-note {
+      margin-top: 1.25rem;
+    }
+
+    .slot-days {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.25rem 0 1rem;
+    }
+
+    .slot-day {
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 50px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      background: rgba(148, 163, 184, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      transition: all 0.2s ease;
+    }
+
+    .slot-day:hover {
+      border-color: rgba(14, 165, 233, 0.35);
+      color: var(--text-primary);
+    }
+
+    .slot-day.is-on {
+      color: var(--accent-primary);
+      background: rgba(14, 165, 233, 0.1);
+      border-color: rgba(14, 165, 233, 0.45);
+    }
+
+    .slot-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 10px 8px;
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      color: var(--text-primary);
+      background: rgba(148, 163, 184, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      transition: all 0.2s ease;
+    }
+
+    .slot:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-primary);
+      background: rgba(14, 165, 233, 0.1);
+    }
+
+    .slot-time {
+      font-weight: 700;
+    }
+
+    .slot-cdmx {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
     /* Footer */
     footer {
       background: var(--bg-secondary);
@@ -869,22 +958,30 @@
           and <a href="https://github.com/hhefesto/agda2bend">agda2bend</a>: open-source Bend tools.</li>
       </ul>
       <p>Recommendations from clients and colleagues: <a href="https://www.linkedin.com/in/hhefesto/">LinkedIn</a>.</p>
+      <p>To book the free call, email <a href="mailto:hhefesto@rdataa.com?subject=Free%20call">hhefesto@rdataa.com</a>; I usually
+      reply within 4 hours during UTC-6 business hours.</p>
     </div>
   </noscript>
 
-  <!-- PureScript renders everything inside #root -->
+  <!-- src/Main.bend renders everything inside #root -->
   <div id="root"></div>
 
   <footer>
     <div class="container">
       <div>© <span id="year"></span> Daniel Herrera • <a href="https://github.com/hhefesto">github.com/hhefesto</a> • <a href="https://www.linkedin.com/in/hhefesto/">LinkedIn</a></div>
-      <div style="margin-top: 8px; font-size: 0.875rem;">Built with Nix and PureScript • <a href="https://github.com/hhefesto/hhefesto.com">source</a></div>
+      <div style="margin-top: 8px; font-size: 0.875rem;">Built with Nix, Bend and <a href="https://github.com/hhefesto/bend-frp">bend-frp</a> • <a href="https://github.com/hhefesto/hhefesto.com">source</a></div>
     </div>
   </footer>
 
   <script>
     document.getElementById('year').textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="./index.js"></script>
+  <!-- The page is a bend-frp app: src/Main.bend; shim.js lends it the browser's clock. -->
+  <script type="module">
+    import App from "./Main.bend";
+    import { mount } from "../../bend-frp/runtime.js";
+    import "./shim.js";
+    mount(App, document.getElementById("root"));
+  </script>
 </body>
 </html>
